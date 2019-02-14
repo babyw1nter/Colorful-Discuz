@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/element-ui.css">
+</head>
+<body>
+  <div id="colorful-app">
+    <div class="colorful main">
+      <div class="colorful color-ctl">
+        <div class="label">起始颜色</div>
+        <el-color-picker v-model="colorStart" size="small"></el-color-picker>
+        <el-input v-model="colorStart" size="small" clearable></el-input>
+      </div>
+      <div class="colorful color-ctl">
+        <div class="label">结束颜色</div>
+        <el-color-picker v-model="colorEnd" size="small"></el-color-picker>
+        <el-input v-model="colorEnd" size="small" clearable></el-input>
+      </div>
+      <el-input type="textarea" placeholder="请输入文本" v-model="colorText" rows="5" style="margin-bottom: 16px"></el-input>
+      <div class="view-text">
+        <el-button type="text" @click="isViewTextCode = isViewTextCode ? false : true" :disabled="isError">查看代码</el-button>
+        <font v-for="text in colorTextComputed.html" :color="text.colorHex">{{ text.text }}</font>
+        <span style="display: none">{{ colorTextView }}</span>
+      </div>
+      <p class="colorful error-alert" v-show="isError">
+        <span>
+          <i class="el-icon-warning" style="margin-right: 2px"></i>
+          {{ errorMsg }}
+        </span>
+      </p>
+    </div>
+    <div class="colorful menubar">
+      <el-button type="primary" :disabled="isError">应用样式到所选文本</el-button>
+    </div>
+  <div>
+  <el-dialog title="查看代码" :visible.sync="isViewTextCode" class="u-dag" fullscreen>
+    <el-input type="textarea" v-model="colorTextComputed.discuz" rows="9" readonly="true"></el-input>
+    <div class="colorful menubar">
+      <el-button type="primary" :disabled="isError">复制到剪贴板</el-button>
+    </div>
+  </el-dialog>
+  <script src="js/vue.js"></script>
+  <script src="js/element-ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
