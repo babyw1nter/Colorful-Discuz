@@ -2,6 +2,7 @@
 var vm = new Vue({
   el: "#colorful-app",
   data: {
+    url: null,
     colorStart: "#FC4040",
     colorEnd: "#6A2BFF",
     colorText: "欢迎使用炫彩字体特效",
@@ -26,6 +27,14 @@ var vm = new Vue({
           msg: "至少需要4个以上字符才可以生成炫彩字"
         });
         textComputed = "欢迎使用炫彩字体特效";
+      }
+      if (this.url != null) {
+        if (this.url.indexOf("forum.php?mod=post") <= -1) {
+          errorArray.push({
+            type: "url error",
+            msg: "当前页面不是 Discuz! 的发帖页面"
+          });
+        }
       }
       if (errorArray.length != 0) { // 判断是否有错误
         this.isError = true;
@@ -94,19 +103,27 @@ var vm = new Vue({
         });
       });
     },
-    copySuccess: function () { // 复制到剪辑版成功
+    copySuccess: function () { // 复制成功
       this.$message({
         message: '复制到剪辑版成功！',
         type: 'success',
         showClose: true
       });
+    },
+    copyError: function () { // 复制失败
+      this.$message({
+        message: '复制到剪辑版失败！',
+        type: 'error',
+        showClose: true
+      });
     }
   },
-  mounted () {
+  mounted () { // 挂载mounted事件
     chrome.tabs.query({ // 寻找mcbbs的tabs并与页面注入的脚本通信, 以获取当前被选中的文本
       active: true,
       currentWindow: true
     }, function (tab) {
+      vm.url = tab[0].url; // 获取页面url
       if (tab[0].url.indexOf("forum.php?mod=post") <= -1) return;
       chrome.tabs.sendMessage(tab[0].id, {
         greeting: "getTextareaSelect"

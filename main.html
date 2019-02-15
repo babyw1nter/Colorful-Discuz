@@ -43,7 +43,7 @@
   <el-dialog title="查看代码" :visible.sync="isViewTextCode" class="u-dag" fullscreen>
     <el-input type="textarea" v-model="colorTextComputed.discuz" rows="9" readonly="true"></el-input>
     <div class="colorful menubar">
-    <el-button type="primary" v-clipboard:copy="colorTextComputed.discuz" v-clipboard:success="copySuccess">复制到剪贴板</el-button>
+    <el-button type="primary" v-clipboard:copy="colorTextComputed.discuz" v-clipboard:success="copySuccess" v-clipboard:error="copyError">复制到剪贴板</el-button>
     </div>
   </el-dialog>
   <script src="js/vue.min.js"></script>

@@ -5,8 +5,9 @@
   "description": "生成 Discuz! 的炫彩文本，让您全年文体两开花！ ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄ (目前部分功能仅支持Mcbbs)",
   "icons": {
     "16": "img/32.png",
+    "32": "img/32.png",
     "48": "img/64.png",
-    "128": "img/128.png"
+    "64": "img/64.png"
   },
   "browser_action": {
     "default_icon": "img/64.png",
