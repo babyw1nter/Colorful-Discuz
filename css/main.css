@@ -22,7 +22,7 @@ body {
 .colorful.main {
   width: 310px;
   min-height: 260px;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 .colorful.menubar {
   margin-top: 12px;
