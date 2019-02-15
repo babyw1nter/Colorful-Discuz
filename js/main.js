@@ -5,20 +5,36 @@ var vm = new Vue({
     colorStart: "#FC4040",
     colorEnd: "#6A2BFF",
     colorText: "欢迎使用炫彩字体特效",
+    textAreaMode: false,
     isViewTextCode: false,
     isError: false,
     errorMsg: ""
   },
   computed: {
     colorTextView: function () {
-      if (!this.colorText || this.colorText.length < 4) {
+      let textComputed = this.colorText;
+      let errorArray = [];
+      if (!this.textAreaMode) { // 判断编辑器模式
+        errorArray.push({
+          type: "mode error",
+          msg: "请将编辑器模式切换到'纯文本'后再使用"
+        });
+      }
+      if (!this.colorText || this.colorText.length < 4) { // 判断长度
+        errorArray.push({
+          type: "length error",
+          msg: "至少需要4个以上字符才可以生成炫彩字"
+        });
+        textComputed = "欢迎使用炫彩字体特效";
+      }
+      if (errorArray.length != 0) { // 判断是否有错误
         this.isError = true;
-        this.errorMsg = "至少需要4个以上字符才可以生成渐变字";
-        return "欢迎使用炫彩字体特效"
+        this.errorMsg = errorArray[errorArray.length - 1].msg;
       } else {
         this.isError = false;
-        return this.colorText;
+        this.errorMsg = "";
       }
+      return textComputed;
     },
     colorStartRgb: function () {
       return hex2rgb(this.colorStart);
@@ -26,20 +42,20 @@ var vm = new Vue({
     colorEndRgb: function () {
       return hex2rgb(this.colorEnd);
     },
-    colorTextComputed: function () {
+    colorTextComputed: function () { // 计算&显示预览文本
       let str = this.colorTextView;
       let strArray = [],
           strArrayTextDiscuz = "",
           strArrayTextHtml = [];
-      strArray = str.split("");
+      strArray = str.split(""); // 将文本单字分割
       let rgbStart = this.colorStartRgb;
       let rgbEnd = this.colorEndRgb;
-      let _colorCalcValue = {
+      let _colorCalcValue = { // 颜色差值计算
         r: (rgbEnd.r - rgbStart.r) / strArray.length,
         g: (rgbEnd.g - rgbStart.g) / strArray.length,
         b: (rgbEnd.b - rgbStart.b) / strArray.length,
       }
-      for (let i = 0; i < strArray.length; i++) {
+      for (let i = 0; i < strArray.length; i++) { // 遍历计算每个字的颜色
         let colorCalcObject = {
           r: Math.round(rgbStart.r + (_colorCalcValue.r * i)),
           g: Math.round(rgbStart.g + (_colorCalcValue.g * i)),
@@ -62,10 +78,55 @@ var vm = new Vue({
         html: strArrayTextHtml
       };
     },
+  },
+  methods: {
+    postTextToTextarea: function () { // 投送至编辑框
+      chrome.tabs.query({
+        active: true,
+        currentWindow: true
+      }, function (tab) {
+        if (tab[0].url.indexOf("forum.php?mod=post") <= -1) return;
+        chrome.tabs.sendMessage(tab[0].id, {
+          greeting: "postTextToTextarea",
+          text: vm.colorTextComputed.discuz
+        }, function (response) {
+          // 此处返回被选择的起始位置和结束位置
+        });
+      });
+    },
+    copySuccess: function () { // 复制到剪辑版成功
+      this.$message({
+        message: '复制到剪辑版成功！',
+        type: 'success',
+        showClose: true
+      });
+    }
+  },
+  mounted () {
+    chrome.tabs.query({ // 寻找mcbbs的tabs并与页面注入的脚本通信, 以获取当前被选中的文本
+      active: true,
+      currentWindow: true
+    }, function (tab) {
+      if (tab[0].url.indexOf("forum.php?mod=post") <= -1) return;
+      chrome.tabs.sendMessage(tab[0].id, {
+        greeting: "getTextareaSelect"
+      }, function (response) {
+        if (typeof (response.mode) == "undefined") {
+          vm.textAreaMode = false;
+        } else {
+          vm.textAreaMode = response.mode;
+        }
+        if (!response.text) return;
+        vm.colorText = response.text;
+      });
+    });
   }
 });
 
-function hex2rgb (hex) { // by Sara
+// ---------- 下面是一些杂项代码 ---------- //
+
+function hex2rgb (hex) { // hex -> rgb by Sara
+  if (typeof (hex) == "undefined") return;
   let sColor = hex.toLowerCase();
   if (sColor && /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(sColor)) {
     if (sColor.length === 4) {
@@ -90,7 +151,9 @@ function hex2rgb (hex) { // by Sara
   }
 }
 
-function rgb2hex(color) { // by gossip
+function rgb2hex(color) { // rgb -> hex by gossip
+  if (typeof (color) == "undefined") return;
+  if (color.indexOf("NaN") != -1) return;
   let rgb = color.split(',');
   let r = parseInt(rgb[0].split('(')[1]);
   let g = parseInt(rgb[1]);
@@ -98,16 +161,3 @@ function rgb2hex(color) { // by gossip
   let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   return hex;
 }
-
-chrome.tabs.query({ // 寻找mcbbs的tabs并与页面注入的脚本通信, 以获取当前被选中的文本
-  active: true,
-  currentWindow: true
-}, function (tab) {
-  if (tab[0].url.indexOf("forum.php?mod=post") <= -1) return;
-  chrome.tabs.sendMessage(tab[0].id, {
-    greeting: "getTextareaSelect"
-  }, function (response) {
-    if (!response) return;
-    vm.colorText = response;
-  });
-});

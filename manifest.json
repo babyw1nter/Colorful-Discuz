@@ -1,125 +1,37 @@
 {
-  // Required
   "manifest_version": 2,
   "name": "Colorful Discuz!",
   "version": "0.0.1",
-
-  // Recommended
-  //"default_locale": "zh_CN",
   "description": "生成 Discuz! 的炫彩文本，让您全年文体两开花！ ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄ (目前部分功能仅支持Mcbbs)",
   "icons": {
     "16": "img/32.png",
     "48": "img/64.png",
     "128": "img/128.png"
   },
-
-  // Pick one (or none)
   "browser_action": {
     "default_icon": "img/64.png",
     "default_title": "Discuz! 炫彩文本 ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄",
     "default_popup": "main.html"
   },
-  // "page_action": {...},
-
-  // Optional
-  //"action": ...,
   "author": "hhui64",
-  //"automation": true,
   "background": {
-    // Recommended
-    //"persistent": false,
-    //"page": "background.html",
     "scripts": ["js/background.js"]
-    // Optional
-    // "service_worker_script": 
   },
-  //"chrome_settings_overrides": {...},
-  // "chrome_ui_overrides": {
-  //   "bookmarks_ui": {
-  //     "remove_bookmark_shortcut": true,
-  //     "remove_button": true
-  //   }
-  // },
-  //"chrome_url_overrides": {...},
-
-  // "commands": { // 快捷键
-  //   // "_execute_browser_action": {
-  //   //   "suggested_key": {
-  //   //     "windows": "Ctrl+Alt+c",
-  //   //     "mac": "Ctrl+Command+c",
-  //   //     "chromeos": "Ctrl+Alt+c",
-  //   //     "linux": "Ctrl+Alt+c"
-  //   //   }
-  //   // }
-  // },
-  // "content_capabilities": {
-  //   "matches": ["*://www.mcbbs.net/*"],
-  //   "permissions": ["unlimitedStorage", "notifications"] 
-  // },
   "content_scripts": [{
-    //"matches": ["<all_urls>"],
     "matches": ["*://www.mcbbs.net/*"],
-    "js": ["js/jQuery-3.3.1-min.js", "js/core.js"],
-    "css": ["css/core.css"],
-    // "document_start", "document_end", "document_idle"
+    "js": ["js/core.js"],
     "run_at": "document_end"
   }],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  //"content_security_policy": "policyString",
-  // "converted_from_user_script": ...,
-  // "current_locale": ...,
-  // "declarative_net_request": ...,
-  // "devtools_page": "devtools.html",
-  // //"event_rules": [{...}],
-  // "externally_connectable": {
-  //   "matches": ["*://*.example.com/*"]
-  // },
-  //"file_browser_handlers": [...],
-  // "file_system_provider_capabilities": {
-  //   "configurable": true,
-  //   "multiple_mounts": true,
-  //   "source": "network"
-  // },
   "homepage_url": "https://blog.sketchowo.cn",
-  // "import": [{"id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],
-  //"incognito": "spanning, split, or not_allowed",
-  //"input_components": ...,
-  //"key": "publicKey",
   "minimum_chrome_version": "40",
-  // "nacl_modules": [...],
-  // "oauth2": ...,
-  // "offline_enabled": true,
-  // "omnibox": {
-  //   "keyword": "aString"
-  // },
-  //"optional_permissions": ["tabs"],
   "options_page": "options.html",
-  // "options_ui": {
-  //   "chrome_style": false,
-  //   "page": "options.html"
-  // },
   "permissions": [
-    "contextMenus", // 右键菜单
-    "tabs", // 标签
-    //"notifications", // 通知
-    //"webRequest", // web请求
-    //"webRequestBlocking",
-    "storage", // 插件本地存储
-    "http://*/*", // 可以通过executeScript或者insertCSS访问的网站
-    "https://*/*" // 可以通过executeScript或者insertCSS访问的网站
-  ]//,
-  // "platforms": ...,
-  // "requirements": {...},
-  // "sandbox": [...],
-  //"short_name": "Short Name",
-  // "signature": ...,
-  // "spellcheck": ...,
-  // "storage": {
-  //   "managed_schema": "schema.json"
-  // }//,
-  // "system_indicator": ...,
-  // "tts_engine": {...},
-  // "update_url": "http://path/to/updateInfo.xml",
-  // "version_name": "aString",
-  // "web_accessible_resources": [...]
+    "contextMenus",
+    "tabs",
+    "storage",
+    "http://*/*",
+    "https://*/*",
+    "declarativeContent"
+  ]
 }
