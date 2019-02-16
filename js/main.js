@@ -3,8 +3,32 @@ var vm = new Vue({
   el: "#colorful-app",
   data: {
     url: null,
+    collapseActiveName: "0",
     colorStart: "#FC4040",
     colorEnd: "#6A2BFF",
+    colorMode: 0,
+    colorTextMode: 0,
+    fontOptions: {
+      size: 5,
+      b: true,
+      i: false,
+      u: false,
+      line: 6
+    },
+    colorModes: [{
+      value: 0,
+      label: '线性插值渐变'
+    }, {
+      value: 1,
+      label: '范围随机颜色'
+    }],
+    colorTextModes: [{
+      value: 0,
+      label: '普通文字'
+    }, {
+      value: 1,
+      label: '残影文字'
+    }],
     colorText: "欢迎使用炫彩字体特效",
     textAreaMode: false,
     isViewTextCode: false,
@@ -56,34 +80,124 @@ var vm = new Vue({
       let strArray = [],
           strArrayTextDiscuz = "",
           strArrayTextHtml = [];
-      strArray = str.split(""); // 将文本单字分割
+      strArray = str.split(""); // 将文本逐字分割
       let rgbStart = this.colorStartRgb;
       let rgbEnd = this.colorEndRgb;
-      let _colorCalcValue = { // 颜色差值计算
-        r: (rgbEnd.r - rgbStart.r) / strArray.length,
-        g: (rgbEnd.g - rgbStart.g) / strArray.length,
-        b: (rgbEnd.b - rgbStart.b) / strArray.length,
+      switch (this.colorTextMode) { // 判断文字模式
+        case 0: // 普通文本
+          switch (this.colorMode) {
+            case 0: // 线性插值渐变
+              let _colorCalcValue = { // 颜色差值计算
+                r: (rgbEnd.r - rgbStart.r) / strArray.length,
+                g: (rgbEnd.g - rgbStart.g) / strArray.length,
+                b: (rgbEnd.b - rgbStart.b) / strArray.length,
+              }
+              for (let i = 0; i < strArray.length; i++) { // 遍历计算每个字的颜色
+                let colorCalcObject = {
+                  r: Math.round(rgbStart.r + (_colorCalcValue.r * i)),
+                  g: Math.round(rgbStart.g + (_colorCalcValue.g * i)),
+                  b: Math.round(rgbStart.b + (_colorCalcValue.b * i))
+                };
+                strArrayTextHtml.push({
+                  text: strArray[i],
+                  color: colorCalcObject
+                });
+                let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
+                strArrayTextHtml[i].colorHex = rgb2hex(colorHex); // rgb转16进制
+              }
+              strArrayTextHtml[0].color = rgb2hex(rgbStart.rgb); // 设置起始色
+              strArrayTextHtml[strArrayTextHtml.length - 1].color = rgb2hex(rgbStart.rgb); // 设置结尾色
+              break;
+            case 1: // 范围随机色
+              for (let i = 0; i < strArray.length; i++) {
+                let colorCalcObject = {
+                  r: randomNum(rgbStart.r, rgbEnd.r),
+                  g: randomNum(rgbStart.g, rgbEnd.g),
+                  b: randomNum(rgbStart.b, rgbEnd.b)
+                };
+                strArrayTextHtml.push({
+                  text: strArray[i],
+                  color: colorCalcObject
+                });
+                let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
+                strArrayTextHtml[i].colorHex = rgb2hex(colorHex);
+              }
+              break;
+            default:
+              break;
+          }
+          for (let i = 0; i < strArrayTextHtml.length; i++) {
+            strArrayTextDiscuz = strArrayTextDiscuz + "[color=" + strArrayTextHtml[i].colorHex + "]" + strArrayTextHtml[i].text + "[/color]";
+          }
+          break;
+        case 1: // 残影文本
+          switch (this.colorMode) {
+            case 0:
+              let _colorCalcValue = { // 颜色差值计算
+                r: (rgbEnd.r - rgbStart.r) / strArray.length,
+                g: (rgbEnd.g - rgbStart.g) / strArray.length,
+                b: (rgbEnd.b - rgbStart.b) / strArray.length,
+              }
+              for (let i = 0; i < strArray.length; i++) { // 遍历计算每个字的颜色
+                let colorCalcObject = {
+                  r: Math.round(rgbStart.r + (_colorCalcValue.r * i)),
+                  g: Math.round(rgbStart.g + (_colorCalcValue.g * i)),
+                  b: Math.round(rgbStart.b + (_colorCalcValue.b * i))
+                };
+                strArrayTextHtml.push({
+                  text: strArray[i],
+                  color: colorCalcObject
+                });
+                let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
+                strArrayTextHtml[i].colorHex = rgb2hex(colorHex); // rgb转16进制
+              }
+              strArrayTextHtml[0].color = rgb2hex(rgbStart.rgb); // 设置起始色
+              strArrayTextHtml[strArrayTextHtml.length - 1].color = rgb2hex(rgbStart.rgb); // 设置结尾色
+              break;
+            case 1:
+              for (let i = 0; i < strArray.length; i++) {
+                let colorCalcObject = {
+                  r: randomNum(rgbStart.r, rgbEnd.r),
+                  g: randomNum(rgbStart.g, rgbEnd.g),
+                  b: randomNum(rgbStart.b, rgbEnd.b)
+                };
+                strArrayTextHtml.push({
+                  text: strArray[i],
+                  color: colorCalcObject
+                });
+                let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
+                strArrayTextHtml[i].colorHex = rgb2hex(colorHex);
+              }
+              break;
+            default:
+              break;
+          }
+          for (let i = 0; i < strArrayTextHtml.length; i++) {
+            strArrayTextDiscuz = strArrayTextDiscuz + "[color=" + strArrayTextHtml[i].colorHex + "]" + strArrayTextHtml[i].text + "[/color]";
+          }
+          strArrayTextDiscuz = "[p=3, 0, left]" + strArrayTextDiscuz + "[/p]"; // 添加p标签包围
+          let _discuzCode = strArrayTextDiscuz;
+          for (let i = 0; i < this.fontOptions.line - 1; i++) {
+            strArrayTextDiscuz += _discuzCode;
+          }
+          break;
+        default:
+          break;
       }
-      for (let i = 0; i < strArray.length; i++) { // 遍历计算每个字的颜色
-        let colorCalcObject = {
-          r: Math.round(rgbStart.r + (_colorCalcValue.r * i)),
-          g: Math.round(rgbStart.g + (_colorCalcValue.g * i)),
-          b: Math.round(rgbStart.b + (_colorCalcValue.b * i))
-        };
-        strArrayTextHtml.push({
-          text: strArray[i],
-          color: colorCalcObject
-        });
-        let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
-        strArrayTextHtml[i].colorHex = rgb2hex(colorHex); // rgb转16进制
-      }
-      strArrayTextHtml[0].color = rgb2hex(rgbStart.rgb); // 起始色
-      strArrayTextHtml[strArrayTextHtml.length - 1].color = rgb2hex(rgbStart.rgb); // 结尾色
-      for (let i = 0; i < strArrayTextHtml.length; i++) { // 生成Discuz!可用代码
-        strArrayTextDiscuz = strArrayTextDiscuz + "[color=" + strArrayTextHtml[i].colorHex + "]" + strArrayTextHtml[i].text + "[/color]";
-      }
+      let _codeHead = {
+        size: "[size=" + this.fontOptions.size +  "]",
+        b: this.fontOptions.b ? "[b]" : "",
+        i: this.fontOptions.i ? "[i]" : "",
+        u: this.fontOptions.u ? "[u]" : ""
+      },
+      _codeFoot = {
+        size: "[/size]",
+        b: this.fontOptions.b ? "[/b]" : "",
+        i: this.fontOptions.i ? "[/b]" : "",
+        u: this.fontOptions.u ? "[/b]" : ""
+      };
       return {
-        discuz: "[b][size=5]" + strArrayTextDiscuz + "[/size][/b]", // TUDO: 自定义字号&粗细
+        discuz: _codeHead.size + _codeHead.b + _codeHead.i + _codeHead.u + strArrayTextDiscuz + _codeFoot.size + _codeFoot.b + _codeFoot.i + _codeFoot.u, // TUDO: 自定义字号&粗细
         html: strArrayTextHtml
       };
     },
@@ -168,7 +282,7 @@ function hex2rgb (hex) { // hex -> rgb by Sara
   }
 }
 
-function rgb2hex(color) { // rgb -> hex by gossip
+function rgb2hex (color) { // rgb -> hex by gossip
   if (typeof (color) == "undefined") return;
   if (color.indexOf("NaN") != -1) return;
   let rgb = color.split(',');
@@ -177,4 +291,19 @@ function rgb2hex(color) { // rgb -> hex by gossip
   let b = parseInt(rgb[2].split(')')[0]);
   let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   return hex;
+}
+
+function randomNum (minNum, maxNum) { // [n, m] randomNum by starof
+  if (minNum > maxNum) [minNum, maxNum] = [maxNum, minNum];
+  switch (arguments.length) {
+    case 1:
+      return parseInt(Math.random() * minNum + 1, 10);
+      break;
+    case 2:
+      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+      break;
+    default:
+      return 0;
+      break;
+  }
 }

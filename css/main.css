@@ -11,13 +11,12 @@ body {
 }
 #colorful-app {
   margin: 16px;
-  margin-top: 10px;
+  margin-top: 0;
 }
 .colorful.logo {
   position: relative;
   height: 36px;
   width: 100%;
-  border-bottom: 1px solid #eee;
 }
 .colorful.main {
   width: 310px;
@@ -36,10 +35,6 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 10px;
-  min-height: 55px;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 32px;
   text-align: center;
   word-wrap: break-word;
   border: 1px dashed #dcdfe6;
@@ -54,8 +49,22 @@ body {
   font-weight: 400;
   background-color: #fff !important;
 }
+.colorful.el-collapse {
+  margin-bottom: 14px;
+}
+i.collapse-title {
+  margin-right: 6px;
+  font-size: 16px;
+}
+span.collapse-title {
+  font-size: 14px;
+  font-weight: normal;
+}
+.collapse-title {
+  color: #606266;
+}
 .colorful.color-ctl {
-  margin-bottom: 10px;
+  margin-top: 10px;
   width: 310px;
   height: 32px;
 }
@@ -65,12 +74,12 @@ body {
   text-align: center;
 }
 .colorful.color-ctl > .label {
-  margin-right: 6px;
+  margin-right: 14px;
   float: left;
   height: 32px;
-  line-height: 32px;
-  font-size: 14px;
-  color: #606266;
+  line-height: 34px;
+  font-size: 12px;
+  color: #409EFF;
 }
 .colorful.color-ctl > .el-color-picker,
 .colorful.color-ctl > .el-input {
@@ -80,6 +89,22 @@ body {
   width: 210px;
   float: left;
   margin-right: 6px;
+}
+.colorful.color-ctl > .el-select,
+.colorful.color-ctl > .el-input-number {
+  width: 80%;
+}
+.colorful.color-ctl > .el-input-number .el-input__inner {
+  text-align: left;
+}
+.colorful.color-ctl > .checkbox {
+  float: right;
+  width: 80%;
+  height: 32px;
+  line-height: 32px;
+}
+.colorful.color-ctl > .checkbox > .el-checkbox {
+  margin-right: 20px;
 }
 .u-dag .el-dialog__body {
   padding: 6px 20px;
