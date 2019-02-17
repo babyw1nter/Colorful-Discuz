@@ -219,11 +219,11 @@ var vm = new Vue({
       _codeFoot = {
         size: "[/size]",
         b: this.fontOptions.b ? "[/b]" : "",
-        i: this.fontOptions.i ? "[/b]" : "",
-        u: this.fontOptions.u ? "[/b]" : ""
+        i: this.fontOptions.i ? "[/i]" : "",
+        u: this.fontOptions.u ? "[/u]" : ""
       };
       return {
-        discuz: _codeHead.size + _codeHead.b + _codeHead.i + _codeHead.u + strArrayTextDiscuz + _codeFoot.size + _codeFoot.b + _codeFoot.i + _codeFoot.u, // TUDO: 自定义字号&粗细
+        discuz: _codeHead.size + _codeHead.b + _codeHead.i + _codeHead.u + strArrayTextDiscuz + _codeFoot.u + _codeFoot.i + _codeFoot.b + _codeFoot.size,
         html: strArrayTextHtml
       };
     }
