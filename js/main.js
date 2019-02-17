@@ -373,10 +373,10 @@ var vm = new Vue({
           type: 'success',
           showClose: true,
           message: '已删除方案"' + name + '"!'
-        }).catch(() => {
         });
         this.settingOptions.plan.plans.splice(index, 1);
         this.settingOptions.plan.isActive = this.settingOptions.plan.plans[this.settingOptions.plan.plans.length - 1].value;
+      }).catch(() => {
       });
     },
     planRename: function () {
