@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Colorful Discuz!",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "生成 Discuz! 的炫彩文本，让您全年文体两开花！ ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄ (目前部分功能仅支持Mcbbs)",
   "icons": {
     "16": "img/32.png",

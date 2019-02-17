@@ -3,17 +3,42 @@ var vm = new Vue({
   el: "#colorful-app",
   data: {
     url: null,
+    plan: 0,
     collapseActiveName: "0",
-    colorStart: "#FC4040",
-    colorEnd: "#6A2BFF",
-    colorMode: 0,
-    colorTextMode: 0,
+    colorOptions: {
+      colorStart: "#FC4040",
+      colorEnd: "#6A2BFF",
+      colorMode: 0,
+      colorTextMode: 0
+    },
     fontOptions: {
       size: 5,
       b: true,
       i: false,
       u: false,
       line: 6
+    },
+    settingOptions: {
+      plan: {
+        isActive: 0,
+        plans: [{
+          value: 0,
+          label: '默认方案',
+          colorOptions: {
+            colorStart: "#FC4040",
+            colorEnd: "#6A2BFF",
+            colorMode: 0,
+            colorTextMode: 0
+          },
+          fontOptions: {
+            size: 5,
+            b: true,
+            i: false,
+            u: false,
+            line: 6
+          }
+        }]
+      }
     },
     colorModes: [{
       value: 0,
@@ -31,6 +56,7 @@ var vm = new Vue({
     }],
     colorText: "欢迎使用炫彩字体特效",
     textAreaMode: false,
+    isViewChangePlan: false,
     isViewTextCode: false,
     isError: false,
     errorMsg: ""
@@ -70,10 +96,10 @@ var vm = new Vue({
       return textComputed;
     },
     colorStartRgb: function () {
-      return hex2rgb(this.colorStart);
+      return hex2rgb(this.colorOptions.colorStart);
     },
     colorEndRgb: function () {
-      return hex2rgb(this.colorEnd);
+      return hex2rgb(this.colorOptions.colorEnd);
     },
     colorTextComputed: function () { // 计算&显示预览文本
       let str = this.colorTextView;
@@ -83,9 +109,9 @@ var vm = new Vue({
       strArray = str.split(""); // 将文本逐字分割
       let rgbStart = this.colorStartRgb;
       let rgbEnd = this.colorEndRgb;
-      switch (this.colorTextMode) { // 判断文字模式
+      switch (this.colorOptions.colorTextMode) { // 判断文字模式
         case 0: // 普通文本
-          switch (this.colorMode) {
+          switch (this.colorOptions.colorMode) {
             case 0: // 线性插值渐变
               let _colorCalcValue = { // 颜色差值计算
                 r: (rgbEnd.r - rgbStart.r) / strArray.length,
@@ -131,7 +157,7 @@ var vm = new Vue({
           }
           break;
         case 1: // 残影文本
-          switch (this.colorMode) {
+          switch (this.colorOptions.colorMode) {
             case 0:
               let _colorCalcValue = { // 颜色差值计算
                 r: (rgbEnd.r - rgbStart.r) / strArray.length,
@@ -200,7 +226,35 @@ var vm = new Vue({
         discuz: _codeHead.size + _codeHead.b + _codeHead.i + _codeHead.u + strArrayTextDiscuz + _codeFoot.size + _codeFoot.b + _codeFoot.i + _codeFoot.u, // TUDO: 自定义字号&粗细
         html: strArrayTextHtml
       };
+    }
+  },
+  watch: { // 深度监听设置项的变化并写入本地储存
+    colorOptions: {
+      deep: true,
+      handler: function () {
+        this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).colorOptions = this.colorOptions;
+        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+      }
     },
+    fontOptions: {
+      deep: true,
+      handler: function () {
+        this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).fontOptions = this.fontOptions;
+        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+      }
+    },
+    'settingOptions.plan.isActive': { // 方案被改变
+      handler: function () {
+        this.colorOptions = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).colorOptions;
+        this.fontOptions = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).fontOptions;
+      },
+    },
+    'settingOptions.plan.plans': {
+      deep: true,
+      handler: function () {
+        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+      }
+    }
   },
   methods: {
     postTextToTextarea: function () { // 投送至编辑框
@@ -230,10 +284,128 @@ var vm = new Vue({
         type: 'error',
         showClose: true
       });
+    },
+    settingChangePlan: function () { // 更改方案
+      this.isViewChangePlan = this.isViewChangePlan ? false : true;
+    },
+    settingAllDefault: function () { // 恢复默认
+      this.$confirm('恢复默认色彩和文本样式, 是否继续?', '恢复默认', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.colorOptions = {
+          colorStart: "#FC4040",
+          colorEnd: "#6A2BFF",
+          colorText: "欢迎使用炫彩字体特效",
+          colorMode: 0,
+          colorTextMode: 0
+        };
+        this.fontOptions = {
+          size: 5,
+          b: true,
+          i: false,
+          u: false,
+          line: 6
+        };
+        this.$message({
+          type: 'success',
+          showClose: true,
+          message: '恢复成功!'
+        });
+      });
+    },
+    planAdd: function () {
+      this.$prompt('请输入方案名称', '添加方案', {
+        confirmButtonText: '添加',
+        cancelButtonText: '取消',
+        inputValidator: (value) => {
+          if (!value) return "方案名称不能为空";
+          if (this.settingOptions.plan.plans.find(item => item.label === value)) return "该方案名称已存在";
+          return true;
+        }
+      }).then(({ value }) => {
+        this.settingOptions.plan.plans.push({
+          value: value,
+          label: value,
+          colorOptions: {
+            colorStart: "#FC4040",
+            colorEnd: "#6A2BFF",
+            colorMode: 0,
+            colorTextMode: 0
+          },
+          fontOptions: {
+            size: 5,
+            b: true,
+            i: false,
+            u: false,
+            line: 6
+          }
+        });
+        this.settingOptions.plan.isActive = this.settingOptions.plan.plans[this.settingOptions.plan.plans.length - 1].value;
+        this.$message({
+          type: 'success',
+          showClose: true,
+          message: '添加新方案"' + value + '"成功!'
+        });
+      });
+    },
+    planDel: function () {
+      let index = this.settingOptions.plan.plans.indexOf(this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive));
+      let name = this.settingOptions.plan.plans[index].label;
+      if (this.settingOptions.plan.isActive == 0 && name == "默认方案") {
+        this.$message({
+          type: 'warning',
+          showClose: true,
+          message: '默认方案不能删除!'
+        });
+        return;
+      }
+      this.$confirm('删除方案"' + name + '", 是否继续?', '删除方案', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          showClose: true,
+          message: '已删除方案"' + name + '"!'
+        });
+        this.settingOptions.plan.plans.splice(index, 1);
+        this.settingOptions.plan.isActive = this.settingOptions.plan.plans[this.settingOptions.plan.plans.length - 1].value;
+      });
+    },
+    planRename: function () {
+      let name = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).label;
+      if (this.settingOptions.plan.isActive == 0 && name == "默认方案") {
+        this.$message({
+          type: 'warning',
+          showClose: true,
+          message: '默认方案不能重命名!'
+        });
+        return;
+      }
+      this.$prompt('请输入方案"' + name + '"的新名称', '重命名方案', {
+          confirmButtonText: '重命名',
+          cancelButtonText: '取消',
+          inputValidator: (value) => {
+            if (!value) return "方案名称不能为空";
+            let item = this.settingOptions.plan.plans.find(item => item.label === value);
+            if (item && item.value != this.settingOptions.plan.isActive) return "该方案名称已存在";
+            return true;
+          }
+      }).then(({ value }) => {
+        this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).label = value;
+        this.$message({
+          type: 'success',
+          showClose: true,
+          message: '已重命名为"' + value + '"!'
+        });
+      });
     }
   },
   mounted () { // 挂载mounted事件
-    chrome.tabs.query({ // 寻找mcbbs的tabs并与页面注入的脚本通信, 以获取当前被选中的文本
+    chrome.tabs.query({ // 寻找Discuz!的tabs并与页面注入的脚本通信, 以获取当前被选中的文本
       active: true,
       currentWindow: true
     }, function (tab) {
@@ -251,11 +423,23 @@ var vm = new Vue({
         vm.colorText = response.text;
       });
     });
+    let localSettingOptions = JSON.parse(localStorage.getItem("settingOptions")); // 读取设置项
+    if (localSettingOptions) {
+      let localSettingOptionsColorOptions = localSettingOptions.plan.plans.find(item => item.value === localSettingOptions.plan.isActive).colorOptions,
+          localSettingOptionsFontOptions = localSettingOptions.plan.plans.find(item => item.value === localSettingOptions.plan.isActive).fontOptions;
+      if (localSettingOptionsColorOptions && localSettingOptionsFontOptions) {
+        this.settingOptions = localSettingOptions;
+        this.colorOptions = localSettingOptionsColorOptions;
+        this.fontOptions = localSettingOptionsFontOptions;
+      } else {
+        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+      }
+    } else {
+      localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+    }
   }
 });
-
 // ---------- 下面是一些杂项代码 ---------- //
-
 function hex2rgb (hex) { // hex -> rgb by Sara
   if (typeof (hex) == "undefined") return;
   let sColor = hex.toLowerCase();
@@ -281,7 +465,6 @@ function hex2rgb (hex) { // hex -> rgb by Sara
     return sColor;
   }
 }
-
 function rgb2hex (color) { // rgb -> hex by gossip
   if (typeof (color) == "undefined") return;
   if (color.indexOf("NaN") != -1) return;
@@ -292,7 +475,6 @@ function rgb2hex (color) { // rgb -> hex by gossip
   let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   return hex;
 }
-
 function randomNum (minNum, maxNum) { // [n, m] randomNum by starof
   if (minNum > maxNum) [minNum, maxNum] = [maxNum, minNum];
   switch (arguments.length) {
