@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Colorful Discuz!",
-  "version": "0.1.1",
-  "description": "生成 Discuz! 的炫彩文本，让您全年文体两开花！ ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄ (目前部分功能仅支持Mcbbs)",
+  "name": "Colorful!",
+  "version": "0.1.2",
+  "description": "生成 Discuz! 的炫彩文本，让您全年文体两开花！ ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄",
   "icons": {
     "16": "img/32.png",
     "32": "img/32.png",
@@ -19,7 +19,7 @@
     "scripts": ["js/background.js"]
   },
   "content_scripts": [{
-    "matches": ["*://www.mcbbs.net/*"],
+    "matches": ["*://*/forum.php?mod=post*"],
     "js": ["js/core.js"],
     "run_at": "document_end"
   }],
