@@ -96,7 +96,7 @@ span.collapse-title {
 }
 .colorful.color-ctl > .el-select,
 .colorful.color-ctl > .el-input-number,
-.colorful.color-ctl.dialog > .checkbox {
+.colorful.color-ctl > .checkbox {
   width: 80%;
 }
 .colorful.color-ctl.dialog > .el-input,
