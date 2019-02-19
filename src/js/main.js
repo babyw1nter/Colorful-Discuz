@@ -257,6 +257,7 @@ var vm = new Vue({
       handler: function () {
         this.colorOptions = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).colorOptions;
         this.fontOptions = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).fontOptions;
+        this.settingOptionsSave();
       },
     },
     'settingOptions.plan.plans': { // 添加了新的方案
