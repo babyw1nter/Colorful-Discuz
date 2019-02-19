@@ -1,10 +1,10 @@
 "use strict";
+var api = chrome.extension.getBackgroundPage().api();
 var vm = new Vue({
   el: "#colorful-app",
   data: {
     url: null,
     plan: 0,
-    collapseActiveName: "0",
     colorOptions: {
       colorStart: "#FC4040",
       colorEnd: "#6A2BFF",
@@ -16,27 +16,36 @@ var vm = new Vue({
       b: true,
       i: false,
       u: false,
+      align: 'center',
       line: 6
     },
+    defaultOptions: {
+      colorOptions: {
+        colorStart: "#FC4040",
+        colorEnd: "#6A2BFF",
+        colorMode: 0,
+        colorTextMode: 0
+      },
+      fontOptions: {
+        size: 5,
+        b: true,
+        i: false,
+        u: false,
+        align: 'center',
+        line: 6
+      },
+      collapseActiveName: "",
+      colorText: "欢迎使用炫彩字体特效"
+    },
     settingOptions: {
+      collapseActiveName: "",
       plan: {
-        isActive: 0,
+        isActive: '默认方案',
         plans: [{
-          value: 0,
+          value: '默认方案',
           label: '默认方案',
-          colorOptions: {
-            colorStart: "#FC4040",
-            colorEnd: "#6A2BFF",
-            colorMode: 0,
-            colorTextMode: 0
-          },
-          fontOptions: {
-            size: 5,
-            b: true,
-            i: false,
-            u: false,
-            line: 6
-          }
+          colorOptions: {},
+          fontOptions: {}
         }]
       }
     },
@@ -96,10 +105,10 @@ var vm = new Vue({
       return textComputed;
     },
     colorStartRgb: function () {
-      return hex2rgb(this.colorOptions.colorStart);
+      return api.hex2rgb(this.colorOptions.colorStart);
     },
     colorEndRgb: function () {
-      return hex2rgb(this.colorOptions.colorEnd);
+      return api.hex2rgb(this.colorOptions.colorEnd);
     },
     colorTextComputed: function () { // 计算&显示预览文本
       let str = this.colorTextView;
@@ -129,24 +138,24 @@ var vm = new Vue({
                   color: colorCalcObject
                 });
                 let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
-                strArrayTextHtml[i].colorHex = rgb2hex(colorHex); // rgb转16进制
+                strArrayTextHtml[i].colorHex = api.rgb2hex(colorHex); // rgb转16进制
               }
-              strArrayTextHtml[0].color = rgb2hex(rgbStart.rgb); // 设置起始色
-              strArrayTextHtml[strArrayTextHtml.length - 1].color = rgb2hex(rgbStart.rgb); // 设置结尾色
+              strArrayTextHtml[0].color = api.rgb2hex(rgbStart.rgb); // 设置起始色
+              strArrayTextHtml[strArrayTextHtml.length - 1].color = api.rgb2hex(rgbStart.rgb); // 设置结尾色
               break;
             case 1: // 范围随机色
               for (let i = 0; i < strArray.length; i++) {
                 let colorCalcObject = {
-                  r: randomNum(rgbStart.r, rgbEnd.r),
-                  g: randomNum(rgbStart.g, rgbEnd.g),
-                  b: randomNum(rgbStart.b, rgbEnd.b)
+                  r: api.randomNum(rgbStart.r, rgbEnd.r),
+                  g: api.randomNum(rgbStart.g, rgbEnd.g),
+                  b: api.randomNum(rgbStart.b, rgbEnd.b)
                 };
                 strArrayTextHtml.push({
                   text: strArray[i],
                   color: colorCalcObject
                 });
                 let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
-                strArrayTextHtml[i].colorHex = rgb2hex(colorHex);
+                strArrayTextHtml[i].colorHex = api.rgb2hex(colorHex);
               }
               break;
             default:
@@ -159,12 +168,12 @@ var vm = new Vue({
         case 1: // 残影文本
           switch (this.colorOptions.colorMode) {
             case 0:
-              let _colorCalcValue = { // 颜色差值计算
+              let _colorCalcValue = {
                 r: (rgbEnd.r - rgbStart.r) / strArray.length,
                 g: (rgbEnd.g - rgbStart.g) / strArray.length,
                 b: (rgbEnd.b - rgbStart.b) / strArray.length,
               }
-              for (let i = 0; i < strArray.length; i++) { // 遍历计算每个字的颜色
+              for (let i = 0; i < strArray.length; i++) {
                 let colorCalcObject = {
                   r: Math.round(rgbStart.r + (_colorCalcValue.r * i)),
                   g: Math.round(rgbStart.g + (_colorCalcValue.g * i)),
@@ -175,24 +184,24 @@ var vm = new Vue({
                   color: colorCalcObject
                 });
                 let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
-                strArrayTextHtml[i].colorHex = rgb2hex(colorHex); // rgb转16进制
+                strArrayTextHtml[i].colorHex = api.rgb2hex(colorHex);
               }
-              strArrayTextHtml[0].color = rgb2hex(rgbStart.rgb); // 设置起始色
-              strArrayTextHtml[strArrayTextHtml.length - 1].color = rgb2hex(rgbStart.rgb); // 设置结尾色
+              strArrayTextHtml[0].color = api.rgb2hex(rgbStart.rgb);
+              strArrayTextHtml[strArrayTextHtml.length - 1].color = api.rgb2hex(rgbStart.rgb);
               break;
             case 1:
               for (let i = 0; i < strArray.length; i++) {
                 let colorCalcObject = {
-                  r: randomNum(rgbStart.r, rgbEnd.r),
-                  g: randomNum(rgbStart.g, rgbEnd.g),
-                  b: randomNum(rgbStart.b, rgbEnd.b)
+                  r: api.randomNum(rgbStart.r, rgbEnd.r),
+                  g: api.randomNum(rgbStart.g, rgbEnd.g),
+                  b: api.randomNum(rgbStart.b, rgbEnd.b)
                 };
                 strArrayTextHtml.push({
                   text: strArray[i],
                   color: colorCalcObject
                 });
                 let colorHex = "rgb(" + strArrayTextHtml[i].color.r + "," + strArrayTextHtml[i].color.g + "," + strArrayTextHtml[i].color.b + ")";
-                strArrayTextHtml[i].colorHex = rgb2hex(colorHex);
+                strArrayTextHtml[i].colorHex = api.rgb2hex(colorHex);
               }
               break;
             default:
@@ -201,7 +210,7 @@ var vm = new Vue({
           for (let i = 0; i < strArrayTextHtml.length; i++) {
             strArrayTextDiscuz = strArrayTextDiscuz + "[color=" + strArrayTextHtml[i].colorHex + "]" + strArrayTextHtml[i].text + "[/color]";
           }
-          strArrayTextDiscuz = "[p=3, 0, left]" + strArrayTextDiscuz + "[/p]"; // 添加p标签包围
+          strArrayTextDiscuz = "[p=3, 0, " + this.fontOptions.align + "]" + strArrayTextDiscuz + "[/p]"; // 添加p标签包围
           let _discuzCode = strArrayTextDiscuz;
           for (let i = 0; i < this.fontOptions.line - 1; i++) {
             strArrayTextDiscuz += _discuzCode;
@@ -211,6 +220,7 @@ var vm = new Vue({
           break;
       }
       let _codeHead = {
+        align: "[align=" + this.fontOptions.align + "]",
         size: "[size=" + this.fontOptions.size +  "]",
         b: this.fontOptions.b ? "[b]" : "",
         i: this.fontOptions.i ? "[i]" : "",
@@ -218,12 +228,13 @@ var vm = new Vue({
       },
       _codeFoot = {
         size: "[/size]",
+        align: "[/align]",
         b: this.fontOptions.b ? "[/b]" : "",
         i: this.fontOptions.i ? "[/i]" : "",
         u: this.fontOptions.u ? "[/u]" : ""
       };
-      return {
-        discuz: _codeHead.size + _codeHead.b + _codeHead.i + _codeHead.u + strArrayTextDiscuz + _codeFoot.u + _codeFoot.i + _codeFoot.b + _codeFoot.size,
+      return { // 给文字添加样式标签, 并输出最终 bbcode
+        discuz: _codeHead.align + _codeHead.size + _codeHead.b + _codeHead.i + _codeHead.u + strArrayTextDiscuz + _codeFoot.u + _codeFoot.i + _codeFoot.b + _codeFoot.size + _codeFoot.align,
         html: strArrayTextHtml
       };
     }
@@ -233,54 +244,53 @@ var vm = new Vue({
       deep: true,
       handler: function () {
         this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).colorOptions = this.colorOptions;
-        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
       }
     },
     fontOptions: {
       deep: true,
       handler: function () {
         this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).fontOptions = this.fontOptions;
-        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
       }
     },
     'settingOptions.plan.isActive': { // 方案被改变
+      deep: true,
       handler: function () {
         this.colorOptions = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).colorOptions;
         this.fontOptions = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).fontOptions;
       },
     },
-    'settingOptions.plan.plans': {
+    'settingOptions.plan.plans': { // 添加了新的方案
       deep: true,
       handler: function () {
-        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+        this.settingOptionsSave();
+      }
+    },
+    'settingOptions.collapseActiveName': { // 选项面板展开被改变
+      deep: true,
+      handler: function () {
+        this.settingOptionsSave();
       }
     }
   },
   methods: {
     postTextToTextarea: function () { // 投送至编辑框
-      chrome.tabs.query({
-        active: true,
-        currentWindow: true
-      }, function (tab) {
-        if (tab[0].url.indexOf("forum.php?mod=post") <= -1) return;
-        chrome.tabs.sendMessage(tab[0].id, {
-          greeting: "postTextToTextarea",
-          text: vm.colorTextComputed.discuz
-        }, function (response) {
-          // 此处返回被选择的起始位置和结束位置
-        });
+      api.sendMessage("postTextToTextarea", {
+        text: vm.colorTextComputed.discuz
+      }, (response) => {
+        // 此处返回被选择的起始位置和结束位置
+        if (!response) return;
       });
     },
     copySuccess: function () { // 复制成功
       this.$message({
-        message: '复制到剪辑版成功！',
+        message: '复制到剪贴板成功！',
         type: 'success',
         showClose: true
       });
     },
     copyError: function () { // 复制失败
       this.$message({
-        message: '复制到剪辑版失败！',
+        message: '复制到剪贴板失败！',
         type: 'error',
         showClose: true
       });
@@ -294,20 +304,9 @@ var vm = new Vue({
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.colorOptions = {
-          colorStart: "#FC4040",
-          colorEnd: "#6A2BFF",
-          colorText: "欢迎使用炫彩字体特效",
-          colorMode: 0,
-          colorTextMode: 0
-        };
-        this.fontOptions = {
-          size: 5,
-          b: true,
-          i: false,
-          u: false,
-          line: 6
-        };
+        this.colorOptions = this.defaultOptions.colorOptions;
+        this.fontOptions = this.defaultOptions.fontOptions;
+        this.colorText = this.defaultOptions.colorText;
         this.$message({
           type: 'success',
           showClose: true,
@@ -316,6 +315,9 @@ var vm = new Vue({
       }).catch(() => {
         // 取消... md还不能省掉这个链式, 不然会报错.....
       });
+    },
+    settingOptionsSave: function () { // 储存设置项
+      localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
     },
     planAdd: function () {
       this.$prompt('请输入方案名称', '添加方案', {
@@ -330,21 +332,10 @@ var vm = new Vue({
         this.settingOptions.plan.plans.push({
           value: value,
           label: value,
-          colorOptions: {
-            colorStart: "#FC4040",
-            colorEnd: "#6A2BFF",
-            colorMode: 0,
-            colorTextMode: 0
-          },
-          fontOptions: {
-            size: 5,
-            b: true,
-            i: false,
-            u: false,
-            line: 6
-          }
+          colorOptions: this.defaultOptions.colorOptions,
+          fontOptions: this.defaultOptions.fontOptions
         });
-        this.settingOptions.plan.isActive = this.settingOptions.plan.plans[this.settingOptions.plan.plans.length - 1].value;
+        this.settingOptions.plan.isActive = value;
         this.$message({
           type: 'success',
           showClose: true,
@@ -356,7 +347,7 @@ var vm = new Vue({
     planDel: function () {
       let index = this.settingOptions.plan.plans.indexOf(this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive));
       let name = this.settingOptions.plan.plans[index].label;
-      if (this.settingOptions.plan.isActive == 0 && name == "默认方案") {
+      if (this.settingOptions.plan.isActive == "默认方案" && name == "默认方案") {
         this.$message({
           type: 'warning',
           showClose: true,
@@ -375,13 +366,13 @@ var vm = new Vue({
           message: '已删除方案"' + name + '"!'
         });
         this.settingOptions.plan.plans.splice(index, 1);
-        this.settingOptions.plan.isActive = this.settingOptions.plan.plans[this.settingOptions.plan.plans.length - 1].value;
+        this.settingOptions.plan.isActive = this.settingOptions.plan.plans[index - 1].value;
       }).catch(() => {
       });
     },
     planRename: function () {
       let name = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).label;
-      if (this.settingOptions.plan.isActive == 0 && name == "默认方案") {
+      if (this.settingOptions.plan.isActive == "默认方案" && name == "默认方案") {
         this.$message({
           type: 'warning',
           showClose: true,
@@ -409,24 +400,16 @@ var vm = new Vue({
       });
     }
   },
-  mounted () { // 挂载mounted事件
-    chrome.tabs.query({ // 寻找Discuz!的tabs并与页面注入的脚本通信, 以获取当前被选中的文本
-      active: true,
-      currentWindow: true
-    }, function (tab) {
-      vm.url = tab[0].url; // 获取页面url
-      if (tab[0].url.indexOf("forum.php?mod=post") <= -1) return;
-      chrome.tabs.sendMessage(tab[0].id, {
-        greeting: "getTextareaSelect"
-      }, function (response) {
-        if (typeof (response.mode) == "undefined") {
-          vm.textAreaMode = false;
-        } else {
-          vm.textAreaMode = response.mode;
-        }
-        if (!response.text) return;
+  mounted () { // 挂载 mounted 事件, 执行一些初始化操作
+    api.getPageUrl((url) => {
+      vm.url = url;
+    });
+    api.sendMessage("getTextareaSelect", {}, (response) => { // 获取 textarea 被选中的文本和编辑器模式
+      if (!response) return;
+      vm.textAreaMode = response.mode;
+      if (response.text) {
         vm.colorText = response.text;
-      });
+      }
     });
     let localSettingOptions = JSON.parse(localStorage.getItem("settingOptions")); // 读取设置项
     if (localSettingOptions) {
@@ -437,60 +420,14 @@ var vm = new Vue({
         this.colorOptions = localSettingOptionsColorOptions;
         this.fontOptions = localSettingOptionsFontOptions;
       } else {
-        localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+        this.settingOptions.plan.plans[0].colorOptions = this.defaultOptions.colorOptions;
+        this.settingOptions.plan.plans[0].fontOptions = this.defaultOptions.fontOptions;
+        this.settingOptionsSave();
       }
     } else {
-      localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
+      this.settingOptions.plan.plans[0].colorOptions = this.defaultOptions.colorOptions;
+      this.settingOptions.plan.plans[0].fontOptions = this.defaultOptions.fontOptions;
+      this.settingOptionsSave();
     }
   }
 });
-// ---------- 下面是一些杂项代码 ---------- //
-function hex2rgb (hex) { // hex -> rgb by Sara
-  if (typeof (hex) == "undefined") return;
-  let sColor = hex.toLowerCase();
-  if (sColor && /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(sColor)) {
-    if (sColor.length === 4) {
-      let sColorNew = "#";
-      for (let i = 1; i < 4; i += 1) {
-        sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
-      }
-      sColor = sColorNew;
-    }
-    let sColorChange = [];
-    for (let i = 1; i < 7; i += 2) {
-      sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
-    }
-    return {
-      r: sColorChange[0],
-      g: sColorChange[1],
-      b: sColorChange[2],
-      rgb: "rgb(" + sColorChange.join(",") + ")"
-    };
-  } else {
-    return sColor;
-  }
-}
-function rgb2hex (color) { // rgb -> hex by gossip
-  if (typeof (color) == "undefined") return;
-  if (color.indexOf("NaN") != -1) return;
-  let rgb = color.split(',');
-  let r = parseInt(rgb[0].split('(')[1]);
-  let g = parseInt(rgb[1]);
-  let b = parseInt(rgb[2].split(')')[0]);
-  let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-  return hex;
-}
-function randomNum (minNum, maxNum) { // [n, m] randomNum by starof
-  if (minNum > maxNum) [minNum, maxNum] = [maxNum, minNum];
-  switch (arguments.length) {
-    case 1:
-      return parseInt(Math.random() * minNum + 1, 10);
-      break;
-    case 2:
-      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-      break;
-    default:
-      return 0;
-      break;
-  }
-}

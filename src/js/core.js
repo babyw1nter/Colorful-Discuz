@@ -2,7 +2,12 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendMessage) {
   let tMode = document.getElementById('e_switchercheck').checked;
   switch (request.greeting) {
-    case "getTextareaSelect": // 获取textarea被选中的文本
+    case "getPageUrl": // 获取 dz 页面的 url
+      sendMessage({
+        url: window.location.href
+      });
+      break;
+    case "getTextareaSelect": // 获取 textarea 被选中的文本
       let text = "";
       if (tMode) { // 判断编辑器模式
         text = window.getSelection().toString();
@@ -14,7 +19,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendMessage) {
         mode: tMode
       });
       break;
-    case "postTextToTextarea": // 投送处理后的代码至textarea
+    case "postTextToTextarea": // 投送处理后的代码至 textarea
       if (tMode) {
         let textarea = document.getElementById('e_textarea');
         let se = {
@@ -24,7 +29,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendMessage) {
         let tValue = textarea.value;
         let tValueStart = tValue.substring(0, se.start);
         let tValueEnd = tValue.substring(se.end, tValue.length);
-        let tValueComputed = tValueStart + request.text + tValueEnd;
+        let tValueComputed = tValueStart + request.data.text + tValueEnd;
         textarea.value = tValueComputed;
         sendMessage({
           tValue: tValue,

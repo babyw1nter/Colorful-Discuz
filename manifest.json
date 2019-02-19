@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Colorful!",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "生成 Discuz! 的炫彩文本，让您全年文体两开花！ ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄",
   "icons": {
     "16": "src/img/32.png",
@@ -10,7 +10,7 @@
     "64": "src/img/64.png"
   },
   "browser_action": {
-    "default_icon": "src/img/64.png",
+    "default_icon": "src/img/32.png",
     "default_title": "Discuz! 炫彩文本 ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄",
     "default_popup": "main.html"
   },

@@ -1,6 +1,7 @@
 @charset "UTF-8";
-body {
-  margin: 0;
+html {
+  min-height: 405px;
+  max-height: 100%;
 }
 @font-face {
   font-family: '04B_03';
@@ -13,7 +14,7 @@ body {
   width: 320px;
 }
 #colorful-app {
-  margin: 16px;
+  margin: 14px 16px;
   margin-top: 0;
 }
 .colorful.logo {
@@ -39,7 +40,6 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 10px;
-  text-align: center;
   word-wrap: break-word;
   border: 1px dashed #dcdfe6;
   border-radius: 4px;
@@ -113,10 +113,17 @@ span.collapse-title {
   height: 32px;
   line-height: 32px;
 }
-.colorful.color-ctl > .checkbox > .el-checkbox {
-  margin-right: 20px;
+.colorful.color-ctl>.checkbox .el-checkbox:last-child {
+  margin-right: 0;
+}
+.colorful.color-ctl > .checkbox .el-radio-group {
+  display: block;
+}
+.colorful.color-ctl > .checkbox .el-radio-group .el-radio-button .el-radio-button__inner {
+  padding: 9px 20.5px;
 }
 .colorful.color-ctl > .checkbox.buttons {
+  float: left;
   line-height: 30px;
 }
 .colorful.color-ctl > .checkbox.buttons .el-button+.el-button {
