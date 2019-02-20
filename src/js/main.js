@@ -113,8 +113,8 @@ var vm = new Vue({
     colorTextComputed: function () { // 计算&显示预览文本
       let str = this.colorTextView;
       let strArray = [],
-          strArrayTextDiscuz = "",
-          strArrayTextHtml = [];
+        strArrayTextDiscuz = "",
+        strArrayTextHtml = [];
       strArray = str.split(""); // 将文本逐字分割
       let rgbStart = this.colorStartRgb;
       let rgbEnd = this.colorEndRgb;
@@ -220,19 +220,19 @@ var vm = new Vue({
           break;
       }
       let _codeHead = {
-        align: "[align=" + this.fontOptions.align + "]",
-        size: "[size=" + this.fontOptions.size +  "]",
-        b: this.fontOptions.b ? "[b]" : "",
-        i: this.fontOptions.i ? "[i]" : "",
-        u: this.fontOptions.u ? "[u]" : ""
-      },
-      _codeFoot = {
-        size: "[/size]",
-        align: "[/align]",
-        b: this.fontOptions.b ? "[/b]" : "",
-        i: this.fontOptions.i ? "[/i]" : "",
-        u: this.fontOptions.u ? "[/u]" : ""
-      };
+          align: "[align=" + this.fontOptions.align + "]",
+          size: "[size=" + this.fontOptions.size + "]",
+          b: this.fontOptions.b ? "[b]" : "",
+          i: this.fontOptions.i ? "[i]" : "",
+          u: this.fontOptions.u ? "[u]" : ""
+        },
+        _codeFoot = {
+          size: "[/size]",
+          align: "[/align]",
+          b: this.fontOptions.b ? "[/b]" : "",
+          i: this.fontOptions.i ? "[/i]" : "",
+          u: this.fontOptions.u ? "[/u]" : ""
+        };
       return { // 给文字添加样式标签, 并输出最终 bbcode
         discuz: _codeHead.align + _codeHead.size + _codeHead.b + _codeHead.i + _codeHead.u + strArrayTextDiscuz + _codeFoot.u + _codeFoot.i + _codeFoot.b + _codeFoot.size + _codeFoot.align,
         html: strArrayTextHtml
@@ -278,8 +278,8 @@ var vm = new Vue({
       api.sendMessage("postTextToTextarea", {
         text: vm.colorTextComputed.discuz
       }, (response) => {
-        // 此处返回被选择的起始位置和结束位置
         if (!response) return;
+        // 此处返回被选择的起始位置和结束位置
       });
     },
     copySuccess: function () { // 复制成功
@@ -313,9 +313,7 @@ var vm = new Vue({
           showClose: true,
           message: '恢复成功!'
         });
-      }).catch(() => {
-        // 取消... md还不能省掉这个链式, 不然会报错.....
-      });
+      }).catch(() => {});
     },
     settingOptionsSave: function () { // 储存设置项
       localStorage.setItem("settingOptions", JSON.stringify(this.settingOptions));
@@ -329,7 +327,9 @@ var vm = new Vue({
           if (this.settingOptions.plan.plans.find(item => item.label === value)) return "该方案名称已存在";
           return true;
         }
-      }).then(({ value }) => {
+      }).then(({
+        value
+      }) => {
         this.settingOptions.plan.plans.push({
           value: value,
           label: value,
@@ -342,8 +342,7 @@ var vm = new Vue({
           showClose: true,
           message: '添加新方案"' + value + '"成功!'
         });
-      }).catch(() => {
-      });
+      }).catch(() => {});
     },
     planDel: function () {
       let index = this.settingOptions.plan.plans.indexOf(this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive));
@@ -368,8 +367,7 @@ var vm = new Vue({
         });
         this.settingOptions.plan.plans.splice(index, 1);
         this.settingOptions.plan.isActive = this.settingOptions.plan.plans[index - 1].value;
-      }).catch(() => {
-      });
+      }).catch(() => {});
     },
     planRename: function () {
       let name = this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).label;
@@ -382,26 +380,37 @@ var vm = new Vue({
         return;
       }
       this.$prompt('请输入方案"' + name + '"的新名称', '重命名方案', {
-          confirmButtonText: '重命名',
-          cancelButtonText: '取消',
-          inputValidator: (value) => {
-            if (!value) return "方案名称不能为空";
-            let item = this.settingOptions.plan.plans.find(item => item.label === value);
-            if (item && item.value != this.settingOptions.plan.isActive) return "该方案名称已存在";
-            return true;
-          }
-      }).then(({ value }) => {
+        confirmButtonText: '重命名',
+        cancelButtonText: '取消',
+        inputValidator: (value) => {
+          if (!value) return "方案名称不能为空";
+          let item = this.settingOptions.plan.plans.find(item => item.label === value);
+          if (item && item.value != this.settingOptions.plan.isActive) return "该方案名称已存在";
+          return true;
+        }
+      }).then(({
+        value
+      }) => {
         this.settingOptions.plan.plans.find(item => item.value === this.settingOptions.plan.isActive).label = value;
         this.$message({
           type: 'success',
           showClose: true,
           message: '已重命名为"' + value + '"!'
         });
-      }).catch(() => {
-      });
+      }).catch(() => {});
+    },
+    randomColor: function () { // 生成随机颜色
+      let rgbStart = "rgb(" + api.randomNum(0, 255) + "," + api.randomNum(0, 255) + "," + api.randomNum(0, 255) + ")";
+      let rgbEnd = "rgb(" + api.randomNum(0, 255) + "," + api.randomNum(0, 255) + "," + api.randomNum(0, 255) + ")";
+      let rgbHex = {
+        start: api.rgb2hex(rgbStart).toUpperCase(),
+        end: api.rgb2hex(rgbEnd).toUpperCase()
+      }
+      this.colorOptions.colorStart = rgbHex.start;
+      this.colorOptions.colorEnd = rgbHex.end;
     }
   },
-  mounted () { // 挂载 mounted 事件, 执行一些初始化操作
+  mounted() { // 挂载 mounted 事件, 执行一些初始化操作
     api.getPageUrl((url) => {
       vm.url = url;
     });
@@ -415,7 +424,7 @@ var vm = new Vue({
     let localSettingOptions = JSON.parse(localStorage.getItem("settingOptions")); // 读取设置项
     if (localSettingOptions) {
       let localSettingOptionsColorOptions = localSettingOptions.plan.plans.find(item => item.value === localSettingOptions.plan.isActive).colorOptions,
-          localSettingOptionsFontOptions = localSettingOptions.plan.plans.find(item => item.value === localSettingOptions.plan.isActive).fontOptions;
+        localSettingOptionsFontOptions = localSettingOptions.plan.plans.find(item => item.value === localSettingOptions.plan.isActive).fontOptions;
       if (localSettingOptionsColorOptions && localSettingOptionsFontOptions) {
         this.settingOptions = localSettingOptions;
         this.colorOptions = localSettingOptionsColorOptions;

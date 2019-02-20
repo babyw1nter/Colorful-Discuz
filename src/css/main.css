@@ -1,40 +1,59 @@
 @charset "UTF-8";
+
 html {
   min-height: 405px;
   max-height: 100%;
 }
+
 @font-face {
   font-family: '04B_03';
   src: url('fonts/04B_03.TTF');
 }
+
 .el-message {
   min-width: 320px;
 }
+
 .el-message-box {
   width: 320px;
 }
+
 #colorful-app {
   margin: 14px 16px;
   margin-top: 0;
 }
+
 .colorful.logo {
   position: relative;
   margin-bottom: 2px;
   height: 36px;
   width: 100%;
 }
+
+.colorful.logo .title-span {
+  position: absolute;
+  top: 9px;
+  font-size: 20px;
+  color: #5ab6ff;
+  font-family: '04B_03';
+}
+
+.colorful.logo .title-setting {
+  height: 100%;
+  line-height: 36px;
+  float: right;
+}
+
+.colorful.logo .title-setting .el-button {
+  font-weight: normal;
+}
+
 .colorful.main {
   width: 310px;
   min-height: 260px;
   overflow: hidden;
 }
-.colorful.menubar {
-  margin-top: 12px;
-  height: 40px;
-}
-.colorful.menubar button {
-  width: 100%;
-}
+
 .colorful .view-text {
   position: relative;
   box-sizing: border-box;
@@ -44,6 +63,7 @@ html {
   border: 1px dashed #dcdfe6;
   border-radius: 4px;
 }
+
 .colorful .view-text .el-button {
   position: absolute;
   padding: 0 2px;
@@ -53,31 +73,38 @@ html {
   font-weight: 400;
   background-color: #fff !important;
 }
+
 .colorful.el-collapse {
   margin-bottom: 14px;
 }
+
 i.collapse-title {
   margin-right: 6px;
   font-size: 16px;
 }
+
 span.collapse-title {
   font-size: 14px;
   font-weight: normal;
 }
+
 .collapse-title {
   color: #606266;
 }
+
 .colorful.color-ctl {
   margin-top: 10px;
   width: 100%;
   height: 32px;
 }
+
 .colorful.error-alert {
   margin-bottom: 2px;
   color: #E6A23C;
   text-align: center;
 }
-.colorful.color-ctl > .label {
+
+.colorful.color-ctl>.label {
   margin-right: 14px;
   float: left;
   height: 32px;
@@ -85,76 +112,98 @@ span.collapse-title {
   font-size: 12px;
   color: #409EFF;
 }
-.colorful.color-ctl > .el-color-picker,
-.colorful.color-ctl > .el-input {
+
+.colorful.color-ctl>.el-color-picker,
+.colorful.color-ctl>.el-input,
+.colorful.color-ctl.is-button>.el-select,
+.colorful.color-ctl.is-button>.el-button {
   display: inline-block;
 }
-.colorful.color-ctl > .el-input {
+
+.colorful.color-ctl>.el-input,
+.colorful.color-ctl.is-button>.el-select {
   width: 210px;
   float: left;
   margin-right: 6px;
 }
-.colorful.color-ctl > .el-select,
-.colorful.color-ctl > .el-input-number,
-.colorful.color-ctl > .checkbox {
+
+.colorful.color-ctl.is-button>.el-button {
+  padding: 9px;
+}
+
+.colorful.color-ctl>.el-select,
+.colorful.color-ctl>.el-input-number,
+.colorful.color-ctl>.checkbox {
   width: 80%;
 }
-.colorful.color-ctl.dialog > .el-input,
-.colorful.color-ctl.dialog > .el-select,
-.colorful.color-ctl.dialog > .el-input-number,
-.colorful.color-ctl.dialog > .checkbox {
+
+.colorful.color-ctl.dialog>.el-input,
+.colorful.color-ctl.dialog>.el-select,
+.colorful.color-ctl.dialog>.el-input-number,
+.colorful.color-ctl.dialog>.checkbox {
   width: 78.7%;
 }
-.colorful.color-ctl > .el-input-number .el-input__inner {
+
+.colorful.color-ctl>.el-input-number .el-input__inner {
   text-align: left;
 }
-.colorful.color-ctl > .checkbox {
+
+.colorful.color-ctl>.checkbox {
   float: right;
   height: 32px;
   line-height: 32px;
 }
+
 .colorful.color-ctl>.checkbox .el-checkbox:last-child {
   margin-right: 0;
 }
-.colorful.color-ctl > .checkbox .el-radio-group {
+
+.colorful.color-ctl>.checkbox .el-radio-group {
   display: block;
 }
-.colorful.color-ctl > .checkbox .el-radio-group .el-radio-button .el-radio-button__inner {
+
+.colorful.color-ctl>.checkbox .el-radio-group .el-radio-button .el-radio-button__inner {
   padding: 9px 20.5px;
 }
-.colorful.color-ctl > .checkbox.buttons {
+
+.colorful.color-ctl>.checkbox.buttons {
   float: left;
   line-height: 30px;
 }
-.colorful.color-ctl > .checkbox.buttons .el-button+.el-button {
-  margin-left: 0px;
+
+.colorful.color-ctl>.checkbox.buttons .el-button+.el-button {
+  margin-left: 1px;
 }
-.u-dag .el-dialog__body {
+
+.colorful.menubar {
+  margin-top: 12px;
+  height: 40px;
+}
+
+.colorful.menubar button {
+  width: 100%;
+}
+
+.u-dag.code .el-dialog__body {
   padding: 6px 20px;
 }
-.u-dag .length-tips {
+
+.u-dag.plan .el-dialog {
+  margin-top: 0 !important;
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+}
+
+.u-dag.plan .el-dialog__body {
+  padding: 0 20px 30px;
+}
+
+.u-dag.plan .length-tips {
   font-size: 12px;
 }
-.u-dag .length-tips span {
+
+.u-dag.plan .length-tips span {
   font-family: Georgia;
   font-size: 16px;
   color: #409EFF;
-}
-.u-dag.plan {
-  height: 180px;
-}
-.colorful.logo .title-span {
-  position: absolute;
-  top: 9px;
-  font-size: 20px;
-  color: #5ab6ff;
-  font-family: '04B_03';
-}
-.colorful.logo .title-setting {
-  height: 100%;
-  line-height: 36px;
-  float: right;
-}
-.colorful.logo .title-setting .el-button {
-  font-weight: normal;
 }

@@ -26,10 +26,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendMessage) {
           start: textarea.selectionStart,
           end: textarea.selectionEnd
         };
-        let tValue = textarea.value;
-        let tValueStart = tValue.substring(0, se.start);
-        let tValueEnd = tValue.substring(se.end, tValue.length);
-        let tValueComputed = tValueStart + request.data.text + tValueEnd;
+        let tValue = textarea.value,
+          tValueStart = tValue.substring(0, se.start),
+          tValueEnd = tValue.substring(se.end, tValue.length),
+          tValueComputed = tValueStart + request.data.text + tValueEnd;
         textarea.value = tValueComputed;
         sendMessage({
           tValue: tValue,
