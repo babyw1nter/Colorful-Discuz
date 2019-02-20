@@ -198,11 +198,11 @@ span.collapse-title {
   padding: 0 20px 30px;
 }
 
-.u-dag.plan .length-tips {
+.u-dag.code .length-tips {
   font-size: 12px;
 }
 
-.u-dag.plan .length-tips span {
+.u-dag.code .length-tips span {
   font-family: Georgia;
   font-size: 16px;
   color: #409EFF;
