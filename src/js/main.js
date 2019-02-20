@@ -276,7 +276,7 @@ var vm = new Vue({
   methods: {
     postTextToTextarea: function () { // 投送至编辑框
       api.sendMessage("postTextToTextarea", {
-        text: vm.colorTextComputed.discuz
+        text: this.colorTextComputed.discuz
       }, (response) => {
         if (!response) return;
         // 此处返回被选择的起始位置和结束位置
@@ -412,13 +412,13 @@ var vm = new Vue({
   },
   mounted() { // 挂载 mounted 事件, 执行一些初始化操作
     api.getPageUrl((url) => {
-      vm.url = url;
+      this.url = url;
     });
     api.sendMessage("getTextareaSelect", {}, (response) => { // 获取 textarea 被选中的文本和编辑器模式
       if (!response) return;
-      vm.textAreaMode = response.mode;
+      this.textAreaMode = response.mode;
       if (response.text) {
-        vm.colorText = response.text;
+        this.colorText = response.text;
       }
     });
     let localSettingOptions = JSON.parse(localStorage.getItem("settingOptions")); // 读取设置项
