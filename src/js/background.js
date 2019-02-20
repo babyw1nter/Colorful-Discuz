@@ -57,16 +57,6 @@ class apiClass {
     let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     return hex;
   }
-  rgb2hex(color) { // rgb -> hex by gossip
-    if (typeof (color) == "undefined") return;
-    if (color.indexOf("NaN") != -1) return;
-    let rgb = color.split(',');
-    let r = parseInt(rgb[0].split('(')[1]);
-    let g = parseInt(rgb[1]);
-    let b = parseInt(rgb[2].split(')')[0]);
-    let hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-    return hex;
-  }
   randomNum(minNum, maxNum) { // [n, m] randomNum by starof
     if (minNum > maxNum)[minNum, maxNum] = [maxNum, minNum];
     switch (arguments.length) {
