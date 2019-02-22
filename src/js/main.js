@@ -55,6 +55,10 @@ var vm = new Vue({
     }, {
       value: 1,
       label: '范围随机颜色'
+    }, {
+      value: 2,
+      label: '彩虹渐变色',
+      disabled: false
     }],
     colorTextModes: [{
       value: 0,
@@ -85,7 +89,7 @@ var vm = new Vue({
           type: "length error",
           msg: "至少需要4个以上字符才可以生成炫彩字"
         });
-        textComputed = "欢迎使用炫彩字体特效";
+        textComputed = this.defaultOptions.colorText;
       }
       if (this.url != null) {
         if (this.url.indexOf("forum.php?mod=post") <= -1) {
@@ -120,7 +124,7 @@ var vm = new Vue({
       let rgbEnd = this.colorEndRgb;
       switch (this.colorOptions.colorTextMode) { // 判断文字模式
         case 0: // 普通文本
-          switch (this.colorOptions.colorMode) {
+          switch (this.colorOptions.colorMode) { // 判断颜色模式
             case 0: // 线性插值渐变
               let _colorCalcValue = { // 颜色差值计算
                 r: (rgbEnd.r - rgbStart.r) / strArray.length,
@@ -260,7 +264,7 @@ var vm = new Vue({
         this.settingOptionsSave();
       },
     },
-    'settingOptions.plan.plans': { // 添加了新的方案
+    'settingOptions.plan.plans': { // 方案被添加、删除、重命名
       deep: true,
       handler: function () {
         this.settingOptionsSave();
@@ -360,13 +364,13 @@ var vm = new Vue({
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.settingOptions.plan.plans.splice(index, 1);
+        this.settingOptions.plan.isActive = this.settingOptions.plan.plans[index - 1].value;
         this.$message({
           type: 'success',
           showClose: true,
           message: '已删除方案"' + name + '"!'
         });
-        this.settingOptions.plan.plans.splice(index, 1);
-        this.settingOptions.plan.isActive = this.settingOptions.plan.plans[index - 1].value;
       }).catch(() => {});
     },
     planRename: function () {

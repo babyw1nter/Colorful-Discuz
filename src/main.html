@@ -24,19 +24,19 @@
           </template>
           <div class="colorful color-ctl">
             <div class="label">起始颜色</div>
-            <el-color-picker v-model="colorOptions.colorStart" size="small"></el-color-picker>
-            <el-input v-model="colorOptions.colorStart" size="small" clearable></el-input>
+            <el-color-picker v-model="colorOptions.colorStart" size="small" :disabled="colorOptions.colorMode === 2"></el-color-picker>
+            <el-input v-model="colorOptions.colorStart" size="small" clearable :disabled="colorOptions.colorMode === 2"></el-input>
           </div>
           <div class="colorful color-ctl">
             <div class="label">结束颜色</div>
-            <el-color-picker v-model="colorOptions.colorEnd" size="small"></el-color-picker>
-            <el-input v-model="colorOptions.colorEnd" size="small" clearable></el-input>
+            <el-color-picker v-model="colorOptions.colorEnd" size="small" :disabled="colorOptions.colorMode === 2"></el-color-picker>
+            <el-input v-model="colorOptions.colorEnd" size="small" clearable :disabled="colorOptions.colorMode === 2"></el-input>
           </div>
           <div class="colorful color-ctl is-button">
             <div class="label">色彩效果</div>
-            <el-button @click="randomColor" icon="el-icon-refresh" size="small"></el-button>
+            <el-button @click="randomColor" icon="el-icon-refresh" size="small" :disabled="colorOptions.colorMode === 2"></el-button>
             <el-select v-model="colorOptions.colorMode" size="small" placeholder="请选择色彩效果">
-              <el-option v-for="item in colorModes" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in colorModes" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
           </div>
         </el-collapse-item>

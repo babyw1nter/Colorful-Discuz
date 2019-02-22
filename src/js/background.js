@@ -58,7 +58,7 @@ class apiClass {
     return hex;
   }
   randomNum(minNum, maxNum) { // [n, m] randomNum by starof
-    if (minNum > maxNum)[minNum, maxNum] = [maxNum, minNum];
+    if (minNum > maxNum) [minNum, maxNum] = [maxNum, minNum];
     switch (arguments.length) {
       case 1:
         return parseInt(Math.random() * minNum + 1, 10);
